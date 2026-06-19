@@ -19,11 +19,11 @@ El objetivo del proyecto es desarrollar un pipeline de predicción para partidos
 
 A diferencia de un modelo que solo predice una clase final, este proyecto busca generar probabilidades interpretables:
 
----
+```text
 Home win: 52%
 Draw:     25%
 Away win: 23%
----
+```
 
 Esto permite evaluar no solo si el modelo acierta o falla, sino también si asigna una probabilidad razonable al resultado que finalmente ocurre.
 
@@ -130,27 +130,27 @@ El núcleo del proyecto es un modelo Poisson para estimar goles esperados.
 
 Se entrenan dos modelos:
 
----
+```text
 Modelo 1: predice lambda_home
 Modelo 2: predice lambda_away
----
+```
 
 Donde:
 
----
+```text
 lambda_home = goles esperados del equipo local
 lambda_away = goles esperados del equipo visitante
----
+```
 
 Luego, con esos valores, se construye una matriz de marcadores posibles usando la distribución de Poisson.
 
 A partir de esa matriz se calculan:
 
----
+```text
 P(Home win)
 P(Draw)
 P(Away win)
----
+```
 
 Este enfoque es interpretable porque permite explicar la predicción desde los goles esperados.
 
@@ -164,14 +164,14 @@ La simulación permite generar miles de partidos posibles a partir de los goles 
 
 Ejemplo conceptual:
 
----
+```text
 Argentina vs France
 
 Simulación 1: 2-1
 Simulación 2: 1-1
 Simulación 3: 0-1
 ...
----
+```
 
 Luego se agregan los resultados simulados para estimar:
 
@@ -207,13 +207,13 @@ El modelo podía mantener una accuracy cercana al 60%, pero el `log_loss` indica
 
 Para resolver esto se agregó una capa de calibración:
 
----
+```text
 Poisson probabilities
     ↓
 Logistic Regression calibrator
     ↓
 Calibrated probabilities
----
+```
 
 El calibrador toma como input las probabilidades generadas por el Poisson y aprende a reajustarlas para que estén mejor alineadas con la frecuencia real de los resultados.
 
@@ -227,7 +227,7 @@ La idea es evitar que el calibrador aprenda sobre probabilidades generadas por u
 
 El flujo conceptual es:
 
----
+```text
 Fold 1:
 Poisson entrena en una parte del histórico
 Predice probabilidades sobre datos no vistos
@@ -238,7 +238,7 @@ Predice probabilidades sobre datos no vistos
 
 Luego:
 El calibrador aprende usando esas probabilidades fuera de muestra.
----
+```
 
 Esto reduce el riesgo de overfitting y hace que la calibración sea más realista para partidos futuros.
 
@@ -254,12 +254,12 @@ Este fue el baseline final del proyecto.
 
 Resultados principales:
 
----
+```text
 Accuracy:        0.604799
 Log loss:        0.863299
 Draw real rate:  0.230833
 Draw pred rate:  0.022614
----
+```
 
 Este modelo logró mantener una accuracy competitiva y mejorar el log loss frente a versiones anteriores.
 
@@ -269,12 +269,12 @@ Se probó ajustar los pesos de clase para darle más importancia al empate.
 
 Resultados:
 
----
+```text
 Accuracy:        0.564258
 Log loss:        0.899676
 Draw real rate:  0.230833
 Draw pred rate:  0.264755
----
+```
 
 Conclusión:
 
@@ -286,12 +286,12 @@ Se agregaron features adicionales al calibrador, como diferencias de lambdas, El
 
 Resultados:
 
----
+```text
 Accuracy:        0.603696
 Log loss:        0.860925
 Draw real rate:  0.230833
 Draw pred rate:  0.001655
----
+```
 
 Conclusión:
 
@@ -303,12 +303,12 @@ Se probó una variante con features enfocadas en partidos cerrados.
 
 Resultados:
 
----
+```text
 Accuracy:        0.603696
 Log loss:        0.867355
 Draw real rate:  0.230833
 Draw pred rate:  0.000276
----
+```
 
 Conclusión:
 
@@ -320,9 +320,9 @@ Se probó una extensión bivariada del Poisson para capturar dependencia entre l
 
 El tuning mostró que el mejor valor era:
 
----
+```text
 common_factor = 0.00
----
+```
 
 A medida que aumentaba el componente común, el log loss empeoraba.
 
@@ -336,7 +336,7 @@ El Poisson bivariado fue descartado porque no mejoró la calidad probabilística
 
 Resultados del modelo final:
 
-```text
+```text 
 Accuracy:        0.604799
 Log loss:        0.863299
 Draw real rate:  0.230833
@@ -359,11 +359,11 @@ Esto ocurre porque el empate suele quedar como segunda clase más probable, incl
 
 Ejemplo:
 
----
+```text
 Home: 39%
 Draw: 31%
 Away: 30%
----
+```
 
 En este caso, el modelo predice Home, aunque el empate tenga una probabilidad relevante.
 
@@ -377,13 +377,13 @@ El proyecto está diseñado para operar de forma dinámica durante el torneo.
 
 El flujo esperado es:
 
----
+```text
 1. Se juegan nuevos partidos.
 2. Se actualiza el dataset con los resultados reales.
 3. Se recalculan features recientes y Elo.
 4. Se vuelve a entrenar o actualizar el pipeline.
 5. Se predice la siguiente jornada.
----
+```
 
 Esto permite adaptar el modelo a cambios recientes de forma, lesiones indirectamente reflejadas en resultados, rendimiento reciente y evolución del torneo.
 
