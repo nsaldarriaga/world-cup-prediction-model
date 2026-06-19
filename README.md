@@ -64,6 +64,7 @@ Para el entrenamiento principal se utilizaron partidos desde 2010 en adelante, c
 
 El pipeline del proyecto sigue esta estructura:
 
+```text
 Carga de datos
     ↓
 Limpieza y separación de partidos jugados / futuros
@@ -83,6 +84,7 @@ Calibración multinomial de probabilidades
 Evaluación temporal
     ↓
 Predicción de partidos futuros
+```
 
 ---
 
