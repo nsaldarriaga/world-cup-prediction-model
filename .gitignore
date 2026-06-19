@@ -1,0 +1,38 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
+# Environment variables
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Cache / temporary files
+.cache/
+*.log
+
+# Data files
+data/processed/*.csv
+
+# Optional: model artifacts
+models/
+*.pkl
+*.joblib
+
+# Optional: local reports cache
+reports/*.html
