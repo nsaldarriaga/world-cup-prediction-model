@@ -1,6 +1,6 @@
 import pandas as pd
 
-TEAM = "Mexico"
+TEAM = "Portugal"
 
 df = pd.read_csv("outputs/dynamic_check_world_cup_elo_evolution.csv")
 
